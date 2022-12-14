@@ -1,5 +1,7 @@
+import MetadataExplorer from "./MetadataExplorer";
+
 function App() {
-  return <div>Hello There</div>;
+  return <MetadataExplorer></MetadataExplorer>;
 }
 
 export default App;
