@@ -6,15 +6,16 @@ const {
   getMetadataFieldsWithVarDoi,
 } = require("../helpers/getMetadataFieldsWithVarDoi");
 
-// Config
-const varDoi = require("../config/varDoi.json");
-const searchableFields = require("../config/searchableFields.json");
-const columnsOnMainTable = require("../config/columnsOnMainTable.json");
-
 // Main program
 
 // Set up the router
 const router = express.Router();
+
+// Load in some config/data
+const varDoi = require("../config/varDoi.json");
+const searchableFields = require("../config/searchableFields.json");
+const columnsOnMainTable = require("../config/columnsOnMainTable.json");
+const categoricalColumns = require("../config/categoricalColumns.json");
 
 // Load data into the Node environment
 const metadata = loadCsvFile("backend/csv-files/variable-level-metadata.csv");
@@ -27,6 +28,12 @@ const searchableMetadata = getMetadataFieldsWithVarDoi(
 
 const metadataForMainTable = getMetadataFieldsWithVarDoi(
   columnsOnMainTable,
+  metadata,
+  varDoi
+);
+
+const rawMetadataForCategoricalColumns = getMetadataFieldsWithVarDoi(
+  categoricalColumns.map((d) => d["categoricalColumn"]),
   metadata,
   varDoi
 );
@@ -46,6 +53,14 @@ router.get("/searchableMetadata", (req, res) => {
 
 router.get("/metadataForMainTable", (req, res) => {
   res.status(200).json(metadataForMainTable);
+});
+
+router.get("/categoricalColumns", (req, res) => {
+  res.status(200).json(categoricalColumns);
+});
+
+router.get("/rawMetadataForCategoricalColumns", (req, res) => {
+  res.status(200).json(rawMetadataForCategoricalColumns);
 });
 
 module.exports = router;

@@ -1,0 +1,24 @@
+[
+  {
+    "categoricalColumn": "data_type",
+    "categoriesAndCounts": [
+      { "category": "Decimal", "count": 14 },
+      { "category": "NumberList", "count": 12 },
+      { "category": "Integer", "count": 1 }
+    ],
+    "type": "secondary"
+  },
+  {
+    "categoricalColumn": "var_domain",
+    "categoriesAndCounts": [
+      { "category": "Demographics", "count": 7 },
+      { "category": "Physical Performance", "count": 7 },
+      { "category": "Anthropometry", "count": 6 },
+      { "category": "Blood Pressure", "count": 3 },
+      { "category": "Labs", "count": 2 },
+      { "category": "Questionnaire", "count": 1 },
+      { "category": "Neurocognitive Battery", "count": 1 }
+    ],
+    "type": "primary"
+  }
+]
