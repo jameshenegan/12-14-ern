@@ -3,12 +3,11 @@ const router = express.Router();
 
 const { loadCsvFile } = require("../helpers/loadCsvFile");
 
-// Load the CSV file of data into memory
-const data = loadCsvFile("backend/csv-files/data.csv");
+const metadata = loadCsvFile("backend/csv-files/variable-level-metadata.csv");
 
 // Test the endpoint
 router.get("/records", (req, res) => {
-  res.status(200).json(data);
+  res.status(200).json(metadata);
 });
 
 module.exports = router;
