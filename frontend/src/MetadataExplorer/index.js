@@ -10,11 +10,17 @@ import { useSelector, useDispatch } from "react-redux";
 import TableWithPaginator from "./TableWithPaginator";
 
 import {
+  fetchVarDoiAsync,
+  fetchDisplayConfigAsync,
+  fetchColsOnMainTableConfigAsync,
   fetchArrayOfUidsAsync,
   fetchMetadataForMainTableAsync,
   fetchSearchableMetadataAsync,
   fetchCategoricalColumnsConfigAsync,
   fetchRawMetadataForCategoricalColumnsAsync,
+  selectVarDoiConfig,
+  selectDisplayConfig,
+  selectColsOnMainTableConfig,
   selectFilteredMetadataForMainTable,
   selectPageNumber,
   selectNumResultsPerPage,
@@ -25,6 +31,9 @@ function MetadataExplorer() {
     selectFilteredMetadataForMainTable
   );
 
+  const varDoi = useSelector(selectVarDoiConfig);
+  const display = useSelector(selectDisplayConfig);
+  const columnsOnMainTable = useSelector(selectColsOnMainTableConfig);
   const pageNumber = useSelector(selectPageNumber);
   const numResultsPerPage = useSelector(selectNumResultsPerPage);
 
@@ -33,6 +42,9 @@ function MetadataExplorer() {
 
   useEffect(
     () => {
+      dispatch(fetchVarDoiAsync());
+      dispatch(fetchDisplayConfigAsync());
+      dispatch(fetchColsOnMainTableConfigAsync());
       dispatch(fetchArrayOfUidsAsync());
       dispatch(fetchMetadataForMainTableAsync());
       dispatch(fetchSearchableMetadataAsync());
@@ -56,6 +68,11 @@ function MetadataExplorer() {
             <Grid item xs={12}>
               <TableWithPaginator
                 data={filteredMetadataForMainTable}
+                columnsOnMainTable={columnsOnMainTable}
+                display={display}
+                pageNumber={pageNumber}
+                numResultsPerPage={numResultsPerPage}
+                varDoi={varDoi}
               ></TableWithPaginator>
             </Grid>
           </Grid>

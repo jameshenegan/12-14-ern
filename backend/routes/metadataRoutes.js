@@ -12,30 +12,30 @@ const {
 const router = express.Router();
 
 // Load in some config/data
-const varDoi = require("../config/varDoi.json");
+const varDoiBackend = require("../config/varDoiBackend.json");
 const searchableFields = require("../config/searchableFields.json");
 const columnsOnMainTable = require("../config/columnsOnMainTable.json");
 const categoricalColumns = require("../config/categoricalColumns.json");
 
 // Load data into the Node environment
 const metadata = loadCsvFile("backend/csv-files/variable-level-metadata.csv");
-const arrayOfVarDois = getArrayOfVarDois(metadata, varDoi);
+const arrayOfVarDois = getArrayOfVarDois(metadata, varDoiBackend);
 const searchableMetadata = getMetadataFieldsWithVarDoi(
   searchableFields,
   metadata,
-  varDoi
+  varDoiBackend
 );
 
 const metadataForMainTable = getMetadataFieldsWithVarDoi(
   columnsOnMainTable,
   metadata,
-  varDoi
+  varDoiBackend
 );
 
 const rawMetadataForCategoricalColumns = getMetadataFieldsWithVarDoi(
   categoricalColumns.map((d) => d["categoricalColumn"]),
   metadata,
-  varDoi
+  varDoiBackend
 );
 
 // Serve the data you loaded in through API Endpoints

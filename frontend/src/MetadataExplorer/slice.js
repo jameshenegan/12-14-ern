@@ -4,6 +4,9 @@ import axios from "axios";
 
 const initialState = {
   status: "idle",
+  display: {},
+  varDoi: "varDoi",
+  columnsOnMainTable: [],
   arrayOfUids: [],
   metadataForMainTable: [],
   filteredMetadataForMainTable: [],
@@ -13,6 +16,30 @@ const initialState = {
   pageNumber: 1,
   numResultsPerPage: 15,
 };
+
+export const fetchVarDoiAsync = createAsyncThunk(
+  "metadataExplorer/fetchVarDoiAsync",
+  async () => {
+    const response = await axios.get("api/config/varDoi");
+    return response.data;
+  }
+);
+
+export const fetchDisplayConfigAsync = createAsyncThunk(
+  "metadataExplorer/fetchdisplayConfigAsync",
+  async () => {
+    const response = await axios.get("api/config/display");
+    return response.data;
+  }
+);
+
+export const fetchColsOnMainTableConfigAsync = createAsyncThunk(
+  "metadataExplorer/fetchColsOnMainTableConfigAsync",
+  async () => {
+    const response = await axios.get("api/config/columnsOnMainTable");
+    return response.data;
+  }
+);
 
 export const fetchArrayOfUidsAsync = createAsyncThunk(
   "metadataExplorer/fetchArrayOfUidsAsync",
@@ -41,7 +68,7 @@ export const fetchSearchableMetadataAsync = createAsyncThunk(
 export const fetchCategoricalColumnsConfigAsync = createAsyncThunk(
   "metadataExplorer/fetchCategoricalColumnsConfigAsync",
   async () => {
-    const response = await axios.get("api/metadata/categoricalColumns");
+    const response = await axios.get("api/config/categoricalColumns");
     return response.data;
   }
 );
@@ -62,6 +89,27 @@ export const metadataExplorerSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(fetchVarDoiAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchVarDoiAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.varDoi = action.payload;
+      })
+      .addCase(fetchDisplayConfigAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchDisplayConfigAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.display = action.payload;
+      })
+      .addCase(fetchColsOnMainTableConfigAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchColsOnMainTableConfigAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.columnsOnMainTable = action.payload;
+      })
       .addCase(fetchArrayOfUidsAsync.pending, (state) => {
         state.status = "loading";
       })
@@ -106,6 +154,18 @@ export const metadataExplorerSlice = createSlice({
       );
   },
 });
+
+export const selectVarDoiConfig = (state) => {
+  return state.metadataExplorer.varDoi;
+};
+
+export const selectDisplayConfig = (state) => {
+  return state.metadataExplorer.display;
+};
+
+export const selectColsOnMainTableConfig = (state) => {
+  return state.metadataExplorer.columnsOnMainTable;
+};
 
 export const selectFilteredMetadataForMainTable = (state) => {
   return state.metadataExplorer.filteredMetadataForMainTable;

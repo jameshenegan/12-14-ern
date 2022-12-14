@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const display = require("../config/display.json");
-const varDoi = require("../config/varDoi.json");
+const varDoi = require("../config/varDoiFrontend.json");
 const columnsOnMainTable = require("../config/columnsOnMainTable.json");
 const categoricalColumns = require("../config/categoricalColumns.json");
 
