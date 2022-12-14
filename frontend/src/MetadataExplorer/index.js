@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import TableWithPaginator from "./TableWithPaginator";
 import SearchArea from "./SearchArea";
+import FiltersCard from "./FiltersCard";
 
 import {
   fetchVarDoiAsync,
@@ -27,6 +28,7 @@ import {
   selectFilteredMetadataForMainTable,
   selectPageNumber,
   selectNumResultsPerPage,
+  selectCategoricalColumnsConfig,
 } from "./slice";
 
 function MetadataExplorer() {
@@ -39,6 +41,7 @@ function MetadataExplorer() {
   const columnsOnMainTable = useSelector(selectColsOnMainTableConfig);
   const pageNumber = useSelector(selectPageNumber);
   const numResultsPerPage = useSelector(selectNumResultsPerPage);
+  const categoricalColumns = useSelector(selectCategoricalColumnsConfig);
 
   // Set up ability to dispatch actions
   const dispatch = useDispatch();
@@ -72,6 +75,10 @@ function MetadataExplorer() {
             <Grid item xs={3}>
               <Stack spacing={1}>
                 <SearchArea></SearchArea>
+                <FiltersCard
+                  categoricalColumns={categoricalColumns}
+                  display={display}
+                ></FiltersCard>
               </Stack>
             </Grid>
             <Grid item xs={9}>

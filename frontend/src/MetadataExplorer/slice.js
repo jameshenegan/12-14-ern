@@ -4,6 +4,7 @@ import axios from "axios";
 
 import { getFilteredIdsBasedOnSearchBox } from "./helpers/getFilteredIdsBasedOnSearchBox";
 import { getFilteredData } from "./helpers/getFilteredData";
+import { getFilteredIdsBasedOnCheckboxes } from "./helpers/getFilteredIdsBasedOnCheckboxes";
 
 const initialState = {
   status: "idle",
@@ -144,6 +145,48 @@ export const metadataExplorerSlice = createSlice({
       state.idsOfFilteredMetadata = idsOfFilteredData;
       state.filteredMetadataForMainTable = filteredData;
     },
+    handleToggleCheckbox: (state, action) => {
+      const { categoricalColumn, category } = action.payload;
+
+      // Check to see if we should add or remove the toggled checkbox.
+      // We will remove the checkbox if it already exists in selectedCheckboxes.
+
+      const shouldRemove = !!state.selectedCheckboxes.find(
+        (checkbox) =>
+          checkbox["categoricalColumn"] === categoricalColumn &&
+          checkbox["category"] === category
+      );
+      const shouldAdd = !shouldRemove;
+
+      if (shouldAdd) {
+        state.selectedCheckboxes = [
+          ...state.selectedCheckboxes,
+          action.payload,
+        ];
+      } else {
+        const newSelectedCheckboxes = [];
+        for (const checkbox of state.selectedCheckboxes) {
+          if (
+            checkbox["categoricalColumn"] !== categoricalColumn ||
+            checkbox["category"] !== category
+          ) {
+            newSelectedCheckboxes.push(checkbox);
+          }
+        }
+        state.selectedCheckboxes = newSelectedCheckboxes;
+      }
+    },
+    updateFilteredIdsBasedOnCheckbox: (state, action) => {
+      const rawData = state.rawMetadataForCategoricalColumns;
+      const selectedCheckboxes = state.selectedCheckboxes;
+      const uid = state.varDoi;
+      const filteredIdsBasedOnCheckboxes = getFilteredIdsBasedOnCheckboxes(
+        rawData,
+        selectedCheckboxes,
+        uid
+      );
+      state.filteredIdsBasedOnCheckboxes = filteredIdsBasedOnCheckboxes;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -234,6 +277,13 @@ export const selectDisplayConfig = (state) => {
 export const selectColsOnMainTableConfig = (state) => {
   return state.metadataExplorer.columnsOnMainTable;
 };
+export const selectCategoricalColumnsConfig = (state) => {
+  return state.metadataExplorer.categoricalColumns;
+};
+
+export const selectRawMetadataForCategoricalColumns = (state) => {
+  return state.metadataExplorer.rawMetadataForCategoricalColumns;
+};
 
 export const selectFilteredMetadataForMainTable = (state) => {
   return state.metadataExplorer.filteredMetadataForMainTable;
@@ -251,12 +301,22 @@ export const selectSimpleSearchString = (state) => {
   return state.metadataExplorer.simpleSearchString;
 };
 
+export const selectSelectedCheckboxes = (state) => {
+  return state.metadataExplorer.selectedCheckboxes;
+};
+
+export const selectFilteredIdsBasedOnSearchBox = (state) => {
+  return state.metadataExplorer.filterIdsBasedOnSearchBox;
+};
+
 export const {
   setPageNumber,
   setNumResultsPerPage,
   handleSimpleSearchStringChange,
   filterIdsBasedOnSearchBox,
   updateFilteredData,
+  handleToggleCheckbox,
+  updateFilteredIdsBasedOnCheckbox,
 } = metadataExplorerSlice.actions;
 
 export default metadataExplorerSlice.reducer;
