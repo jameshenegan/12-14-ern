@@ -6,6 +6,8 @@ const initialState = {
   arrayOfUids: [],
   metadataForMainTable: [],
   filteredMetadataForMainTable: [],
+  searchableMetadata: [],
+  status: "idle",
 };
 
 export const fetchArrayOfUidsAsync = createAsyncThunk(
@@ -20,6 +22,14 @@ export const fetchMetadataForMainTableAsync = createAsyncThunk(
   "metadataExplorer/fetchMetadataForMainTable",
   async () => {
     const response = await axios.get("api/metadata/metadataForMainTable");
+    return response.data;
+  }
+);
+
+export const fetchSearchableMetadataAsync = createAsyncThunk(
+  "metadataExplorer/fetchSearchableMetadataAsync",
+  async () => {
+    const response = await axios.get("api/metadata/searchableMetadata");
     return response.data;
   }
 );
@@ -44,6 +54,13 @@ export const metadataExplorerSlice = createSlice({
         state.status = "idle";
         state.metadataForMainTable = action.payload;
         state.filteredMetadataForMainTable = action.payload;
+      })
+      .addCase(fetchSearchableMetadataAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchSearchableMetadataAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.searchableMetadata = action.payload;
       });
   },
 });
