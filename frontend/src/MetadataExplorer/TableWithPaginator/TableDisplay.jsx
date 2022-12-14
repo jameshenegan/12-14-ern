@@ -6,6 +6,9 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
+import HeaderCheckbox from "./HeaderCheckbox";
+import StagingCheckbox from "./StagingCheckbox";
+
 export default function TableDisplay({
   data,
   columnsOnMainTable,
@@ -16,7 +19,10 @@ export default function TableDisplay({
     return (
       <TableHead>
         <TableRow>
-          <TableCell></TableCell>
+          <TableCell>
+            {" "}
+            <HeaderCheckbox></HeaderCheckbox>
+          </TableCell>
           {colNames.map((colName, i) => {
             const key = `col-${i}`;
             return <TableCell key={key}>{display[colName]}</TableCell>;
@@ -41,7 +47,10 @@ export default function TableDisplay({
           },
         }}
       >
-        <TableCell></TableCell>
+        <TableCell>
+          {" "}
+          <StagingCheckbox uid={datum[varDoi]}></StagingCheckbox>
+        </TableCell>
         {colNames.map((colName) => {
           return (
             <TableCell key={`${datum[colName]}::${i}::${colName}`}>

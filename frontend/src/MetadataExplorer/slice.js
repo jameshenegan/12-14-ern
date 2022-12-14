@@ -25,6 +25,7 @@ const initialState = {
   filteredIdsBasedOnSearchBox: [],
   filteredIdsBasedOnCheckboxes: [],
   idsOfFilteredMetadata: [],
+  idsOfItemsInStagingArea: [],
 };
 
 export const fetchVarDoiAsync = createAsyncThunk(
@@ -187,6 +188,37 @@ export const metadataExplorerSlice = createSlice({
       );
       state.filteredIdsBasedOnCheckboxes = filteredIdsBasedOnCheckboxes;
     },
+    handleStagingCheckboxClick: (state, action) => {
+      const idOfStagingCheckbox = action.payload;
+
+      // Check to see if we should add or remove the toggled checkbox.
+      // We will remove the checkbox if it already exists in idsOfItemsInStagingArea.
+
+      const matchingItems = state.idsOfItemsInStagingArea.filter(
+        (id) => id === idOfStagingCheckbox
+      );
+
+      const shouldRemoveFromStaging = matchingItems.length > 0;
+
+      const shouldAddToStaging = !shouldRemoveFromStaging;
+
+      if (shouldAddToStaging) {
+        state.idsOfItemsInStagingArea = [
+          ...state.idsOfItemsInStagingArea,
+          action.payload,
+        ];
+      } else {
+        state.idsOfItemsInStagingArea = state.idsOfItemsInStagingArea.filter(
+          (id) => id !== idOfStagingCheckbox
+        );
+      }
+    },
+    resetIdsOfItemsInStagingArea: (state, action) => {
+      state.idsOfItemsInStagingArea = [];
+    },
+    setIdsOfItemsInStagingArea: (state, action) => {
+      state.idsOfItemsInStagingArea = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -309,6 +341,14 @@ export const selectFilteredIdsBasedOnSearchBox = (state) => {
   return state.metadataExplorer.filterIdsBasedOnSearchBox;
 };
 
+export const selectIdsOfItemsInStagingArea = (state) => {
+  return state.metadataExplorer.idsOfItemsInStagingArea;
+};
+
+export const selectIdsOfFilteredMetadata = (state) => {
+  return state.metadataExplorer.idsOfFilteredMetadata;
+};
+
 export const {
   setPageNumber,
   setNumResultsPerPage,
@@ -317,6 +357,9 @@ export const {
   updateFilteredData,
   handleToggleCheckbox,
   updateFilteredIdsBasedOnCheckbox,
+  handleStagingCheckboxClick,
+  resetIdsOfItemsInStagingArea,
+  setIdsOfItemsInStagingArea,
 } = metadataExplorerSlice.actions;
 
 export default metadataExplorerSlice.reducer;
