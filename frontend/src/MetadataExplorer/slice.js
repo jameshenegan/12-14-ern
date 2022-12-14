@@ -2,6 +2,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import axios from "axios";
 
+import { getFilteredIdsBasedOnSearchBox } from "./helpers/getFilteredIdsBasedOnSearchBox";
+import { getFilteredData } from "./helpers/getFilteredData";
+
 const initialState = {
   status: "idle",
   display: {},
@@ -15,6 +18,12 @@ const initialState = {
   rawMetadataForCategoricalColumns: [],
   pageNumber: 1,
   numResultsPerPage: 15,
+  simpleSearchString: "",
+  fieldsToSearch: [],
+  selectedCheckboxes: [],
+  filteredIdsBasedOnSearchBox: [],
+  filteredIdsBasedOnCheckboxes: [],
+  idsOfFilteredMetadata: [],
 };
 
 export const fetchVarDoiAsync = createAsyncThunk(
@@ -37,6 +46,14 @@ export const fetchColsOnMainTableConfigAsync = createAsyncThunk(
   "metadataExplorer/fetchColsOnMainTableConfigAsync",
   async () => {
     const response = await axios.get("api/config/columnsOnMainTable");
+    return response.data;
+  }
+);
+
+export const fetchFieldsToSearchConfigAsync = createAsyncThunk(
+  "metadataExplorer/fetchFieldsToSearchConfigAsync",
+  async () => {
+    const response = await axios.get("api/config/fieldsToSearch");
     return response.data;
   }
 );
@@ -93,6 +110,40 @@ export const metadataExplorerSlice = createSlice({
     setNumResultsPerPage: (state, action) => {
       state.numResultsPerPage = action.payload;
     },
+    handleSimpleSearchStringChange: (state, action) => {
+      state.simpleSearchString = action.payload;
+    },
+    filterIdsBasedOnSearchBox: (state, action) => {
+      const searchableMetadata = state.searchableMetadata;
+      const simpleSearchString = state.simpleSearchString;
+      const varDoi = state.varDoi;
+      const fieldsToSearch = state.fieldsToSearch;
+
+      const filteredIdsBasedOnSearchBox = getFilteredIdsBasedOnSearchBox(
+        searchableMetadata,
+        simpleSearchString,
+        varDoi,
+        fieldsToSearch
+      );
+
+      state.filteredIdsBasedOnSearchBox = filteredIdsBasedOnSearchBox;
+    },
+    updateFilteredData: (state, action) => {
+      const metadataForMainTable = state.metadataForMainTable;
+      const filteredIdsBasedOnSearchBox = state.filteredIdsBasedOnSearchBox;
+      const filteredIdsBasedOnCheckboxes = state.filteredIdsBasedOnCheckboxes;
+      const varDoi = state.varDoi;
+
+      const { idsOfFilteredData, filteredData } = getFilteredData(
+        metadataForMainTable,
+        filteredIdsBasedOnSearchBox,
+        filteredIdsBasedOnCheckboxes,
+        varDoi
+      );
+
+      state.idsOfFilteredMetadata = idsOfFilteredData;
+      state.filteredMetadataForMainTable = filteredData;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -117,12 +168,22 @@ export const metadataExplorerSlice = createSlice({
         state.status = "idle";
         state.columnsOnMainTable = action.payload;
       })
+      .addCase(fetchFieldsToSearchConfigAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchFieldsToSearchConfigAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.fieldsToSearch = action.payload;
+      })
       .addCase(fetchArrayOfUidsAsync.pending, (state) => {
         state.status = "loading";
       })
       .addCase(fetchArrayOfUidsAsync.fulfilled, (state, action) => {
         state.status = "idle";
         state.arrayOfUids = action.payload;
+        state.filteredIdsBasedOnSearchBox = action.payload;
+        state.filteredIdsBasedOnCheckboxes = action.payload;
+        state.idsOfFilteredMetadata = action.payload;
       })
       .addCase(fetchMetadataForMainTableAsync.pending, (state) => {
         state.status = "loading";
@@ -186,7 +247,16 @@ export const selectNumResultsPerPage = (state) => {
   return state.metadataExplorer.numResultsPerPage;
 };
 
-export const { setPageNumber, setNumResultsPerPage } =
-  metadataExplorerSlice.actions;
+export const selectSimpleSearchString = (state) => {
+  return state.metadataExplorer.simpleSearchString;
+};
+
+export const {
+  setPageNumber,
+  setNumResultsPerPage,
+  handleSimpleSearchStringChange,
+  filterIdsBasedOnSearchBox,
+  updateFilteredData,
+} = metadataExplorerSlice.actions;
 
 export default metadataExplorerSlice.reducer;

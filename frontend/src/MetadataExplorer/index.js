@@ -4,15 +4,18 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
 
 import { useSelector, useDispatch } from "react-redux";
 
 import TableWithPaginator from "./TableWithPaginator";
+import SearchArea from "./SearchArea";
 
 import {
   fetchVarDoiAsync,
   fetchDisplayConfigAsync,
   fetchColsOnMainTableConfigAsync,
+  fetchFieldsToSearchConfigAsync,
   fetchArrayOfUidsAsync,
   fetchMetadataForMainTableAsync,
   fetchSearchableMetadataAsync,
@@ -44,6 +47,7 @@ function MetadataExplorer() {
     () => {
       dispatch(fetchVarDoiAsync());
       dispatch(fetchDisplayConfigAsync());
+      dispatch(fetchFieldsToSearchConfigAsync());
       dispatch(fetchColsOnMainTableConfigAsync());
       dispatch(fetchArrayOfUidsAsync());
       dispatch(fetchMetadataForMainTableAsync());
@@ -65,7 +69,12 @@ function MetadataExplorer() {
                 number generator. It's not real!
               </Typography>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={3}>
+              <Stack spacing={1}>
+                <SearchArea></SearchArea>
+              </Stack>
+            </Grid>
+            <Grid item xs={9}>
               <TableWithPaginator
                 data={filteredMetadataForMainTable}
                 columnsOnMainTable={columnsOnMainTable}
