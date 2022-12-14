@@ -11,6 +11,8 @@ import {
   fetchArrayOfUidsAsync,
   fetchMetadataForMainTableAsync,
   fetchSearchableMetadataAsync,
+  fetchCategoricalColumnsConfigAsync,
+  fetchRawMetadataForCategoricalColumnsAsync,
 } from "./slice";
 
 function MetadataExplorer() {
@@ -22,6 +24,8 @@ function MetadataExplorer() {
       dispatch(fetchArrayOfUidsAsync());
       dispatch(fetchMetadataForMainTableAsync());
       dispatch(fetchSearchableMetadataAsync());
+      dispatch(fetchCategoricalColumnsConfigAsync());
+      dispatch(fetchRawMetadataForCategoricalColumnsAsync());
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []

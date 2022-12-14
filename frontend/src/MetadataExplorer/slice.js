@@ -3,11 +3,13 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
+  status: "idle",
   arrayOfUids: [],
   metadataForMainTable: [],
   filteredMetadataForMainTable: [],
   searchableMetadata: [],
-  status: "idle",
+  categoricalColumns: [],
+  rawMetadataForCategoricalColumns: [],
 };
 
 export const fetchArrayOfUidsAsync = createAsyncThunk(
@@ -30,6 +32,24 @@ export const fetchSearchableMetadataAsync = createAsyncThunk(
   "metadataExplorer/fetchSearchableMetadataAsync",
   async () => {
     const response = await axios.get("api/metadata/searchableMetadata");
+    return response.data;
+  }
+);
+
+export const fetchCategoricalColumnsConfigAsync = createAsyncThunk(
+  "metadataExplorer/fetchCategoricalColumnsConfigAsync",
+  async () => {
+    const response = await axios.get("api/metadata/categoricalColumns");
+    return response.data;
+  }
+);
+
+export const fetchRawMetadataForCategoricalColumnsAsync = createAsyncThunk(
+  "metadataExplorer/fetchRawMetadataForCategoricalColumnsAsync",
+  async () => {
+    const response = await axios.get(
+      "api/metadata/rawMetadataForCategoricalColumns"
+    );
     return response.data;
   }
 );
@@ -61,7 +81,27 @@ export const metadataExplorerSlice = createSlice({
       .addCase(fetchSearchableMetadataAsync.fulfilled, (state, action) => {
         state.status = "idle";
         state.searchableMetadata = action.payload;
-      });
+      })
+      .addCase(fetchCategoricalColumnsConfigAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(
+        fetchCategoricalColumnsConfigAsync.fulfilled,
+        (state, action) => {
+          state.status = "idle";
+          state.categoricalColumns = action.payload;
+        }
+      )
+      .addCase(fetchRawMetadataForCategoricalColumnsAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(
+        fetchRawMetadataForCategoricalColumnsAsync.fulfilled,
+        (state, action) => {
+          state.status = "idle";
+          state.rawMetadataForCategoricalColumns = action.payload;
+        }
+      );
   },
 });
 
