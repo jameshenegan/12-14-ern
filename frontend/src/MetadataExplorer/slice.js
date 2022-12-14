@@ -86,7 +86,14 @@ export const fetchRawMetadataForCategoricalColumnsAsync = createAsyncThunk(
 export const metadataExplorerSlice = createSlice({
   name: "metadataExplorer",
   initialState,
-  reducers: {},
+  reducers: {
+    setPageNumber: (state, action) => {
+      state.pageNumber = action.payload;
+    },
+    setNumResultsPerPage: (state, action) => {
+      state.numResultsPerPage = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchVarDoiAsync.pending, (state) => {
@@ -178,5 +185,8 @@ export const selectPageNumber = (state) => {
 export const selectNumResultsPerPage = (state) => {
   return state.metadataExplorer.numResultsPerPage;
 };
+
+export const { setPageNumber, setNumResultsPerPage } =
+  metadataExplorerSlice.actions;
 
 export default metadataExplorerSlice.reducer;

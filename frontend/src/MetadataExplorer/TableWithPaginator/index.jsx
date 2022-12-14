@@ -1,6 +1,8 @@
 import Grid from "@mui/material/Grid";
 import TableDisplay from "./TableDisplay";
 
+import Paginator from "./Paginator";
+
 function TableWithPaginator({
   data,
   columnsOnMainTable,
@@ -34,6 +36,7 @@ function TableWithPaginator({
         display={display}
         varDoi={varDoi}
       ></TableDisplay>
+      <Paginator paginatorProps={paginatorProps}></Paginator>
     </Grid>
   );
 }
