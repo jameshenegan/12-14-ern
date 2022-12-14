@@ -1,11 +1,25 @@
-import React, { Fragment } from "react";
+import React, { useEffect, Fragment } from "react";
 
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 
+import { useDispatch } from "react-redux";
+
+import { fetchArrayOfUidsAsync } from "./slice";
+
 function MetadataExplorer() {
+  // Set up ability to dispatch actions
+  const dispatch = useDispatch();
+
+  useEffect(
+    () => {
+      dispatch(fetchArrayOfUidsAsync());
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
   return (
     <Fragment>
       <Box sx={{ flexGrow: 1, m: 1 }}>
