@@ -10,6 +10,8 @@ const initialState = {
   searchableMetadata: [],
   categoricalColumns: [],
   rawMetadataForCategoricalColumns: [],
+  pageNumber: 1,
+  numResultsPerPage: 15,
 };
 
 export const fetchArrayOfUidsAsync = createAsyncThunk(
@@ -104,5 +106,17 @@ export const metadataExplorerSlice = createSlice({
       );
   },
 });
+
+export const selectFilteredMetadataForMainTable = (state) => {
+  return state.metadataExplorer.filteredMetadataForMainTable;
+};
+
+export const selectPageNumber = (state) => {
+  return state.metadataExplorer.pageNumber;
+};
+
+export const selectNumResultsPerPage = (state) => {
+  return state.metadataExplorer.numResultsPerPage;
+};
 
 export default metadataExplorerSlice.reducer;

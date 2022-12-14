@@ -9,6 +9,7 @@ app.use(express.json());
 
 app.use("/api/data", require("./backend/routes/dataRoutes"));
 app.use("/api/metadata", require("./backend/routes/metadataRoutes"));
+app.use("/api/config", require("./backend/routes/configRoutes"));
 
 // Serve static assets in production
 // Set static folder

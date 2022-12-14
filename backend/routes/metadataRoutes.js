@@ -55,10 +55,6 @@ router.get("/metadataForMainTable", (req, res) => {
   res.status(200).json(metadataForMainTable);
 });
 
-router.get("/categoricalColumns", (req, res) => {
-  res.status(200).json(categoricalColumns);
-});
-
 router.get("/rawMetadataForCategoricalColumns", (req, res) => {
   res.status(200).json(rawMetadataForCategoricalColumns);
 });
