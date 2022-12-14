@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 
 import { useDispatch } from "react-redux";
 
-import { fetchArrayOfUidsAsync } from "./slice";
+import { fetchArrayOfUidsAsync, fetchMetadataForMainTableAsync } from "./slice";
 
 function MetadataExplorer() {
   // Set up ability to dispatch actions
@@ -16,6 +16,7 @@ function MetadataExplorer() {
   useEffect(
     () => {
       dispatch(fetchArrayOfUidsAsync());
+      dispatch(fetchMetadataForMainTableAsync());
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
