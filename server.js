@@ -4,6 +4,11 @@ const express = require("express");
 
 const app = express();
 
+// Init Middleware
+app.use(express.json());
+
+app.use("/api/data", require("./backend/routes/dataRoutes"));
+
 // Serve static assets in production
 // Set static folder
 app.use(express.static("public"));
